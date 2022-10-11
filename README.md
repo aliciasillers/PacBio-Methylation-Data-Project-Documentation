@@ -1,2 +1,2 @@
-# CCS-Methylation-Data-Project-Documentation
-This repository is meant to be an unofficial set of documentation for everything related to obtaining DNA methylation data from PacBio circular consensus sequence data, particularly on the UC Davis FARM computing cluster.
+# CCS Methylation Data Project Documentation
+This repository is meant to be an unofficial set of documentation for everything related to obtaining DNA methylation data from PacBio circular consensus sequence data, particularly on the UC Davis FARM computing cluster. There are many steps involved in this process, all with their own documentation in different places, some of which is not very comprehensive. The purpose of this repository is to have all of the necessary information in one place with detailed instructions and solutions for problems. 
