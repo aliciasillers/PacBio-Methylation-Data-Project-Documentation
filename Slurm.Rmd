@@ -23,7 +23,7 @@ Despite there already being documentation, this SLURM documentation exists in or
 ## Writing scripts to submit as jobs
 
 To submit code to run, the code needs to be written in a batch script. Open a window to write a script using the following command, substituting any name for [script name]:
-```{bash}
+```{bash eval=FALSE, include=TRUE}
 nano [script name].sh
 # you also can change the file type if you want to code in a different language. for example, you could write [script name].py for python
 ```
@@ -49,14 +49,14 @@ One thing to keep in mind while filling out the header is that you want to make 
 ## Submitting a job
 
 sbatch is used to submit a job to run on a specified partition of the cluster. Just specify the partition and the script you are submitting. For information about what partitions exist and what nodes they have, you can use the command sinfo. 
-```{bash}
+```{bash eval=FALSE, include=TRUE}
 sbatch -p [partition] [script name].sh
 ```
 
 ## Checking on your job
 
 The following command will provide a list of all jobs currently running or waiting to run on the cluster as well as information about these jobs, such as how long they have been running and what node(s) they are running on. The list of jobs is organized by partition, as each partition has its own queue. 
-```{bash}
+```{bash eval=FALSE, include=TRUE}
 squeue
 ```
 
