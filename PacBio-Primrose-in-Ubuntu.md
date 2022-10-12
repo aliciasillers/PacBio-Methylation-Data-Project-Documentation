@@ -106,7 +106,7 @@ conda deactivate
 module load samtools/1.15.1
 
 #Get alignments with 'Primary' tag and over 1500 base pairs in length
-samtools view -h Mojo_sorted.bam | awk 'substr($0,1,1) == "@" || $2 < 2048 && length($10) > 1500' | samtools view -bS - > Mojo_Primary1500.bam
+samtools view -h movie_sorted.bam | awk 'substr($0,1,1) == "@" || $2 < 2048 && length($10) > 1500' | samtools view -bS - > movie_Primary1500.bam
 
 # Download, use msamtools to get reads aligned 80% of their length
 #samtools sort Mojo_Primary1500_msam.bam -o Mojo_Primary1500_msam_resort.bam
