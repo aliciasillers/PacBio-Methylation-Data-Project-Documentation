@@ -20,6 +20,8 @@ Despite there already being documentation, this SLURM documentation exists in or
 
 ## How SLURM works
 
+
+
 ## Writing scripts to submit as jobs
 
 To submit code to run, the code needs to be written in a batch script. Open a window to write a script using the following command, substituting any name for [script name]:
