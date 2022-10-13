@@ -18,6 +18,8 @@ Despite there already being documentation, this SLURM documentation exists in or
 
 ## How SLURM works
 
+SLURM aids in users' interaction with computer clusters in order for computing resources to be used efficiently. On the FARM cluster, there is one head node and several compute nodes. Large computing tasks should not be run on the head node because everyone has to share this node. Instead, these tasks must be submitted to run on the compute nodes which are designated for this purpose. This is where SLURM comes in. SLURM commands are used to submit computing jobs in the form of scripts. SLURM then determines what resources you have requested for your job and assesses what resources are available so that the appropriate resources can be allocated on the available node(s). If resources are not available right away, SLURM puts your job in the queue to run once other jobs finish.
+
 ## Writing scripts to submit as jobs
 
 To submit code to run, the code needs to be written in a batch script. Open a window to write a script using the following command, substituting any name for [script name]:
@@ -62,3 +64,4 @@ The following command will provide a list of all jobs currently running or waiti
 squeue
 ```
 
+There will also be two files created when your job starts running: one ending in .out and one ending in .err. Printing these files will give you more information about your job, such as whether it was successfully completed and how long it ran or has been running (.out), or what kinds of problems were encountered while running the code (.err). 
