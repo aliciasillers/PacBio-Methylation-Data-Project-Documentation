@@ -9,7 +9,7 @@ output:
 
 
 
-# PacBio Primrose in Ubuntu
+# PacBio Primrose Workflow in Ubuntu
 
 Official PacBio Primrose documentation: https://github.com/PacificBiosciences/primrose    
 While the official Primrose documentation only covers use of Primrose itself, this documentation covers the whole workflow, starting with obtaining HiFi reads with kinetics from existing PacBio HiFi sequence data and ending with visualization of DNA methylation data along the genome. 
@@ -18,7 +18,7 @@ While the official Primrose documentation only covers use of Primrose itself, th
 
 ### If using FARM
 
-Primrose, ccs, and minimap2 are already installed in FARM under the module bio3. This module will need to be loaded and activated every time you open FARM using the following code.
+Primrose, ccs, and PBMM2 are already installed in FARM under the module bio3. This module will need to be loaded and activated every time you open FARM using the following code.
 
 ```bash
 module load bio3
@@ -127,30 +127,30 @@ Keep in mind that if a file is ever in a different directory than your code, you
 
 ## PacBio CpG Tools
 
-Official documentation: https://github.com/PacificBiosciences/pb-CpG-tools
+Official documentation: https://github.com/PacificBiosciences/pb-CpG-tools    
   
-In order to run the following code, there are two files you will need to obtain from the official documentation. You can try to get them using wget, but when I did this, it was resulting in html files instead of the correct code contained in the file. What you can do instead is start by creating empty files with the same names using nano conda_env_cpg.yaml and nano aligned_bam_to_cpg_scores.py, then paste the source code from the documentation into the files.     
-
+In order to start using PacBio CpG tools, there are some files you will need to obtain. You can use the code below to download these files, which will show up in a directory called pb-CpG-tools.
 
 ```bash
 git clone https://github.com/PacificBiosciences/pb-CpG-tools.git
 ```
 
-The first script to run will contain the following code, which will use the .yaml file obtained to create an environment that will have all of the packages required to run the next code.
+The first script to run will contain the following code, which will use the .yaml file to create an environment that will have all of the packages required to run the next code. Since the .yaml file is in a directory, you might need to include the path to the file. This goes for later steps as well.
 
 ```bash
 # create conda environment
 conda env create -f conda_env_cpg.yaml
+  # or conda env create -f ./pb-CpG-tools/conda_env_cpg.yaml
 
 # activate environment
 conda activate cpg
 ```
 
-The next code takes the .py file obtained and your aligned .bam file and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
+The next code takes the .py file and your aligned .bam file as input and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
 
 ```bash
 python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/to/model
-# if you clone the github files into the same directory you will be running the code from, the path will be ./pb-CpG-tools/pileup_calling_model
+
 # label is a string which results in [label].bed/bw
 #additional optional arguments detailed in official documentation
 ```
