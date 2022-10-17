@@ -11,7 +11,8 @@ output:
 
 # PacBio Primrose in Ubuntu
 
-Official PacBio Primrose documentation: https://github.com/PacificBiosciences/primrose 
+Official PacBio Primrose documentation: https://github.com/PacificBiosciences/primrose    
+While the official Primrose documentation only covers use of Primrose itself, this documentation covers the whole workflow, starting with obtaining HiFi reads with kinetics from existing PacBio HiFi sequence data and ending with visualization of DNA methylation data along the genome. 
 
 ## Installation
 
@@ -25,6 +26,7 @@ source activate pbio-2022-09-29
 ```
 
 ### If not using FARM
+
 Step 1: conda
 
 ccs and primrose are installed using conda. conda can be installed on Ubuntu as part of anaconda or miniconda. Here we will be using miniconda, but the process for installing anaconda is similar. This example is for miniconda3 for Linux 64-bit with Python 3.8. For other options visit this website: https://docs.conda.io/en/latest/miniconda.html#linux-installers
@@ -85,63 +87,74 @@ primrose movie.hifi_reads.bam movie.5mc.hifi_reads.bam
 
 Primrose will assess probability of CpG context DNA methylation and apply SAM tags to the data that indicate methylation. When viewing the output file with samtools view, these tags will show up towards the end of the printed data. The numbers after the MM tag represent the number of unmethylated cytosines between each methylated cytosine. The numbers after the ML tag represent the probability that each of these methylated cytosines are truly methylated. This data will be used for later steps in the workflow. Find more information about the SAM tags here: https://samtools.github.io/hts-specs/SAMtags.pdf 
 
-## PBMM2 or Minimap2
+## Alignment
 
-After obtaining the hifi reads with methylation tags, the next step is to align these reads to a reference genome. Typically PBMM2 is used for this, but we will use minimap2, which works better for the strawberry genome.     
+After obtaining the hifi reads with methylation tags, the next step is to align these reads to a reference genome using PBMM2. Minimap2 usually works better for aligning the strawberry genome, but it requires input files to be in FASTA format, and we will need to use .bam input files.    
 
-Official minimap2 documentation: https://github.com/lh3/minimap2 
+Official PBMM2 documentation: https://github.com/PacificBiosciences/pbmm2
 
-### for FARM
+### Installation
 
+If using FARM, you do not need to install PBMM2. Simply load the bio3 module and activate pbio-2022-09-29.     
+
+If not using FARM, install PBMM2 using conda.
 
 ```bash
-module load minimap2/2.24
-source activate minimap2-2.24
-
-#Call minimap2, specify reference genome file, output file, and type of sequence data
-minimap2 -a ref.fa -t 4 -o movie_aligned.bam -x map-hifi
-
-conda deactivate
-
-module load samtools/1.15.1
-
-#Get alignments with 'Primary' tag and over 1500 base pairs in length
-samtools view -h movie_sorted.bam | awk 'substr($0,1,1) == "@" || $2 < 2048 && length($10) > 1500' | samtools view -bS - > movie_Primary1500.bam
-
-# Download, use msamtools to get reads aligned 80% of their length
-#samtools sort Mojo_Primary1500_msam.bam -o Mojo_Primary1500_msam_resort.bam
-#samtools index Mojo_Primary1500_msam_resort.bam
+conda install -c bioconda pbmm2
 ```
 
-### not for FARM
+### Get Reference Genome
 
+Before you can get started using PBMM2, you will need to download the reference genome to which to align your data. For this, you can use the wget command with the url to the online download in order to download the files from the internet into your directory. The result may be a zipped file, in which case you can use the unzip command in order to access the files inside.
 
 ```bash
-git clone https://github.com/lh3/minimap2
-cd minimap2 && make
+wget http://url.org/ref.zip
 ```
 
 ```bash
-conda install -c bioconda samtools
+unzip ref.zip
 ```
+
+### Run PBMM2
+
+There are two steps to running PBMM2. The first is to index your reference genome. The second is to align your data with a --sort argument at the end. The --sort argument is necessary in order for the CpG tools step to work.
+
+```bash
+pbmm2 index ref.fa ref.mmi
+pbmm2 align ref.mmi movie.5mc.hifi_reads.bam movie_aligned.bam --sort
+```
+Keep in mind that if a file is ever in a different directory than your code, you will need to specify the path to the file. This might be necessary for your reference genome. For example ref.fa might be replaced with /home/user/refdir/ref.fa. 
 
 ## PacBio CpG Tools
 
 Official documentation: https://github.com/PacificBiosciences/pb-CpG-tools
+  
+In order to run the following code, there are two files you will need to obtain from the official documentation. You can try to get them using wget, but when I did this, it was resulting in html files instead of the correct code contained in the file. What you can do instead is start by creating empty files with the same names using nano conda_env_cpg.yaml and nano aligned_bam_to_cpg_scores.py, then paste the source code from the documentation into the files.     
 
+
+```bash
+git clone https://github.com/PacificBiosciences/pb-CpG-tools.git
+```
+
+The first script to run will contain the following code, which will use the .yaml file obtained to create an environment that will have all of the packages required to run the next code.
 
 ```bash
 # create conda environment
-$ conda env create -f conda_env_cpg.yaml
+conda env create -f conda_env_cpg.yaml
 
 # activate environment
-$ conda activate cpg
+conda activate cpg
 ```
 
+The next code takes the .py file obtained and your aligned .bam file and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV.
 
 ```bash
-python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label [options] # label is a string which results in [label].bed/bw
+python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/to/model
+# if you clone the github files into the same directory you will be running the code from, the path will be ./pb-CpG-tools/pileup_calling_model
+# label is a string which results in [label].bed/bw
 #additional optional arguments detailed in official documentation
 ```
+If you did not index your file using pbindex earlier in the workflow, you will need to do that in order for the aligned_bam_to_cpg_scores code to work. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the aligned_bam_to_cpg_scores code, you will need to activate the environment again using conda activate cpg. 
 
 ## Visualization   
+
