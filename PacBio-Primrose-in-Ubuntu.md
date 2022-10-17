@@ -1,5 +1,5 @@
 ---
-title: "PacBio Primrose in Ubuntu"
+title: "PacBio Primrose Workflow in Ubuntu"
 author: "Alicia Sillers"
 date: "2022-10-10"
 output: 
@@ -14,7 +14,7 @@ output:
 Official PacBio Primrose documentation: https://github.com/PacificBiosciences/primrose    
 While the official Primrose documentation only covers use of Primrose itself, this documentation covers the whole workflow, starting with obtaining HiFi reads with kinetics from existing PacBio HiFi sequence data and ending with visualization of DNA methylation data along the genome. 
 
-## Installation
+## Initial Installations
 
 ### If using FARM
 
@@ -146,7 +146,7 @@ conda env create -f conda_env_cpg.yaml
 conda activate cpg
 ```
 
-The next code takes the .py file obtained and your aligned .bam file and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV.
+The next code takes the .py file obtained and your aligned .bam file and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
 
 ```bash
 python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/to/model
@@ -154,7 +154,9 @@ python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/
 # label is a string which results in [label].bed/bw
 #additional optional arguments detailed in official documentation
 ```
-If you did not index your file using pbindex earlier in the workflow, you will need to do that in order for the aligned_bam_to_cpg_scores code to work. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the aligned_bam_to_cpg_scores code, you will need to activate the environment again using conda activate cpg. 
-
+ 
 ## Visualization   
 
+Finally, we have all the files we need and can start visualizing and interacting with our data using the Integrative Genomics Viewer, or IGV.    
+
+Download IGV here: https://software.broadinstitute.org/software/igv/download
