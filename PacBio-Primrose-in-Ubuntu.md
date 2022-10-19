@@ -146,7 +146,7 @@ conda env create -f conda_env_cpg.yaml
 conda activate cpg
 ```
 
-The next code takes the .py file and your aligned .bam file as input and should produce .bed and .bg files. We will be using the .bed files to visualize our methylation data in IGV. Also keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
+The next code takes the .py file and your aligned .bam file as input and should produce .bed and .bg files. Keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
 
 ```bash
 python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/to/model
@@ -154,6 +154,17 @@ python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/
 # label is a string which results in [label].bed/bw
 #additional optional arguments detailed in official documentation
 ```
+ 
+The resulting .bed files will have 9 columns of information detailing the likelihood that a cytosine is methylated at each location. Specifically, each column has the following information:    
+1. reference name   
+2. start coordinate   
+3. end coordinate   
+4. modification probability   
+5. haplotype    
+6. coverage   
+7. estimated modified site count (extrapolated from model modification probability)   
+8. estimated unmodified site count (extrapolated from model modification probability)   
+9. discretized modification probability (calculated from estimated mod/unmod site counts)
  
 ## Visualization   
 
