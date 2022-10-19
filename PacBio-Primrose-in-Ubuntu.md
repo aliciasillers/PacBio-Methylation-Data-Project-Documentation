@@ -168,6 +168,4 @@ The resulting .bed files will have 9 columns of information detailing the likeli
  
 ## Visualization   
 
-Finally, we have all the files we need and can start visualizing and interacting with our data using the Integrative Genomics Viewer, or IGV.    
-
-Download IGV here: https://software.broadinstitute.org/software/igv/download
+The .bed file(s) obtained from this process contain the final information this workflow is designed to produce. From here there are many avenues for analyzing the data. For this project, we will be using R to visualize density of methylation across the genome.
