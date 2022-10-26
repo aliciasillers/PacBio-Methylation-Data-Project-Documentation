@@ -232,5 +232,55 @@ LoadBED <- function(path.to.bed) {
 The LoadBED function will take the path to your .bed file as its argument. If using a Windows computer, the path to this file on your machine will be the same as it is in Ubuntu with the following prefix: //wsl.localhost/Ubuntu/. You will want to bind the output of the function to a name, which you will then be able to access as your data frame.
 
 ```r
-S18 <- LoadBED("//wsl.localhost/Ubuntu/home/user/movie.combined.denovo.bed")
+DataName <- LoadBED("//wsl.localhost/Ubuntu/home/user/movie.combined.denovo.bed")
 ```
+
+After loading the file into R, we will be ready to work with the data. As before mentioned, the goal for this project is to visualize the data we have extracted rather than to perform any quantitative analyses just yet, although quantitative analysis is possible as well. We will bin the data for visualization and create a bar graph that displays average probabilities of methylation at groups of CpG sites across the genome.     
+
+To begin, we will need to load the following packages:
+
+```r
+library(tidyverse)
+library(dplyr)
+library(mltools)
+library(data.table)
+library(ggplot2)
+```
+
+If you don't already have all of the necessary packages, you will need to install them.
+
+```r
+install.packages("tidyverse")
+install.packages("mltools")
+install.packages("data.table")
+install.packages("ggplot2")
+```
+
+Before we can start making a figure, we will need to manipulate the data to get what we want to represent. Before we do that, we will need to get to know the data a bit in order to understand how to manipulate it. In particular, we are going to focus on the "start" column and the "chrom" column. 
+
+```r
+range(DataName$start) #returns the length of the longest chromosome
+unique(DataName$chrom) #returns a list of all the chromosomes
+```
+
+The range value can help inform how many bins you want for your data. If you want the bins to be around a certain number of base pairs, divide the range by that number. Just keep in mind that the bins for the smaller chromosomes will not represent the exact same length.     
+
+The unique function returns a list of the names present in the "chrom" column. This is useful for figuring out is there is anything you will want to filter out of the data displayed in your figure. For example, the Strawberry data includes some contigs in addition to chromosomes, which will not be included in the figure.     
+
+Next, we want to manipulate the data to create a data frame with rows of binned data and only three columns.
+
+```r
+Clean_Data <- DataName %>% group_by(chrom) %>% filter(!grepl("^contig", chrom)) %>% mutate(bins = ntile(start, 30)
+Organized_Data <- Clean_Data %>% group_by(chrom, bins)
+Final_Data <- aggregate((modprob~bins+chrom), data=Organized_Data, mean)
+```
+
+Finally, use ggplot to create the figure.
+
+```r
+ggplot(Final_Data, aes(x = bins, y = modprob, colour = chrom)) + geom_col() + facet_wrap(vars(chrom)) + theme(legend.position = "none") + ggtitle("Probability of Methylation at CpG Sites Across the Genome") + xlab("Position") + ylab("Average Probability of Methylation")
+```
+
+Here is the final result when all of the above steps are carried out with Strawberry data:
+
+
