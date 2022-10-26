@@ -143,4 +143,17 @@ ccsmeth call_freqb \
   --threads 10 --sort --bed
 ```
 
-The output for this step should be a .bed file containing location-specific information about methylation across the genome. This file can be used for visualization and quantitative analyses. For an example of how to visualize methylation data, see the visualization section of the "PacBio Primrose in Ubuntu" markdown file and Figure 1 in the repository. 
+The output for this step should be a .bed file containing location-specific information about methylation across the genome. Specifically, each column has the following information:   
+1. chrom: the chromosome name   
+2. pos: 0-based position of the targeted base in the chromosome   
+3. pos_end: pos + 1   
+4. strand: +/-, the aligned strand of the read to the reference
+5. prob_0_sum: sum of the probabilities of the targeted base predicted as 0 (unmethylated) [DEPRECATED, ONLY meaningful in call_freqt module]    
+6. prob_1_sum: sum of the probabilities of the targeted base predicted as 1 (methylated) [DEPRECATED, ONLY meaningful in call_freqt module]    
+7. count_modified: number of reads in which the targeted base counted as modified   
+8. count_unmodified: number of reads in which the targeted base counted as unmodified   
+9. coverage: number of reads aligned to the targeted base   
+10. modification_frequency: modification frequency    
+11. k_mer: the kmer around the targeted base [DEPRECATED, ONLY meaningful in call_freqt module]   
+
+This file can then be used for visualization and quantitative analyses. For an example of how to visualize methylation data, see the visualization section of the "PacBio Primrose in Ubuntu" markdown file and Figure 1 in the repository. 
