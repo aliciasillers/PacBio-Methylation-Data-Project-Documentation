@@ -281,5 +281,6 @@ ggplot(Final_Data, aes(x = bins, y = modprob, colour = chrom)) + geom_col() + fa
 ```
 
 Here is the final result when all of the above steps are carried out with Strawberry data:    
-![](../Figure 1.jpg)<!-- -->
+![Figure]("C:/Users/alici/Desktop/Davis/Year 1/Knapp Lab Rotation/Figure 1.jpg")
+
 
