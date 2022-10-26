@@ -18,7 +18,7 @@ While the official Primrose documentation only covers use of Primrose itself, th
 
 ### If using FARM
 
-Primrose, ccs, and PBMM2 are already installed in FARM under the module bio3. This module will need to be loaded and activated every time you open FARM using the following code.
+Primrose, ccs, and pbmm2 are already installed in FARM under the module bio3. This module will need to be loaded and activated every time you open FARM using the following code.
 
 ```bash
 module load bio3
@@ -29,7 +29,7 @@ source activate pbio-2022-09-29
 
 Step 1: conda
 
-ccs and primrose are installed using conda. conda can be installed on Ubuntu as part of anaconda or miniconda. Here we will be using miniconda, but the process for installing anaconda is similar. This example is for miniconda3 for Linux 64-bit with Python 3.8. For other options visit this website: https://docs.conda.io/en/latest/miniconda.html#linux-installers
+ccs and primrose can be installed using conda. conda can be installed on Ubuntu as part of anaconda or miniconda. Here we will be using miniconda, but the process for installing anaconda is similar. This example is for miniconda3 for Linux 64-bit with Python 3.8. For other options visit this website: https://docs.conda.io/en/latest/miniconda.html#linux-installers
 
 
 ```bash
@@ -59,7 +59,7 @@ conda install -c bioconda primrose
 
 ## Running ccs
 
-Official ccs documentation: ccs.how     
+Official ccs documentation: https://ccs.how/     
 
 On large subread data sets, ccs takes a long time to run. As a result, it is helpful to run it in chunks, which you can run in parallel. The first step towards this is to index the data with the following code. In the following ccs and primrose code, "movie" is used as an example name for some data. 
 
@@ -89,13 +89,13 @@ Primrose will assess probability of CpG context DNA methylation and apply SAM ta
 
 ## Alignment
 
-After obtaining the hifi reads with methylation tags, the next step is to align these reads to a reference genome using PBMM2. Minimap2 usually works better for aligning the strawberry genome, but it requires input files to be in FASTA format, and we will need to use .bam input files.    
+After obtaining the hifi reads with methylation tags, the next step is to align these reads to a reference genome using pbmm2. Minimap2 usually works better for aligning the strawberry genome, but it requires input files to be in FASTA format, and we will need to use .bam input files in order to retain the methylation data.    
 
 Official PBMM2 documentation: https://github.com/PacificBiosciences/pbmm2
 
 ### Installation
 
-If using FARM, you do not need to install PBMM2. Simply load the bio3 module and activate pbio-2022-09-29.     
+If using FARM, you do not need to install pbmm2. Simply load the bio3 module and activate pbio-2022-09-29.     
 
 If not using FARM, install PBMM2 using conda.
 
@@ -105,7 +105,7 @@ conda install -c bioconda pbmm2
 
 ### Get Reference Genome
 
-Before you can get started using PBMM2, you will need to download the reference genome to which to align your data. For this, you can use the wget command with the url to the online download in order to download the files from the internet into your directory. The result may be a zipped file, in which case you can use the unzip command in order to access the files inside.
+Before you can get started using pbmm2, you will need to download the reference genome to which to align your data. For this, you can use the wget command with the url to the online download in order to download the files from the internet into your directory. The result may be a zipped file, in which case you can use the unzip command in order to access the files inside.
 
 ```bash
 wget http://url.org/ref.zip
@@ -115,9 +115,9 @@ wget http://url.org/ref.zip
 unzip ref.zip
 ```
 
-### Run PBMM2
+### Run pbmm2
 
-There are two steps to running PBMM2. The first is to index your reference genome. The second is to align your data with a --sort argument at the end. The --sort argument is necessary in order for the CpG tools step to work.
+There are two steps to running pbmm2. The first is to index your reference genome. The second is to align your data with a --sort argument at the end. The --sort argument is necessary in order for the CpG tools step to work.
 
 ```bash
 pbmm2 index ref.fa ref.mmi
@@ -128,7 +128,9 @@ Keep in mind that if a file is ever in a different directory than your code, you
 ## PacBio CpG Tools
 
 Official documentation: https://github.com/PacificBiosciences/pb-CpG-tools    
-  
+
+The purpose of PacBio CpG tools is to quantify CpG methylation in particular. Other DNA methylation contexts will be ignored. The output will have a row of data for each CpG site in the read.   
+
 In order to start using PacBio CpG tools, there are some files you will need to obtain. You can use the code below to download these files, which will show up in a directory called pb-CpG-tools.
 
 ```bash
@@ -146,7 +148,7 @@ conda env create -f conda_env_cpg.yaml
 conda activate cpg
 ```
 
-The next code takes the .py file and your aligned .bam file as input and should produce .bed and .bg files. Keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using conda activate cpg.
+The next code takes the .py file and your aligned .bam file as input and should produce .bed and .bg files. Keep in mind that if you close and reopen Ubuntu between running the environment code and the following code, you will need to activate the environment again using "conda activate cpg"
 
 ```bash
 python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/to/model
@@ -155,7 +157,7 @@ python aligned_bam_to_cpg_scores.py -b input.bam -f ref.fasta -o label -d /path/
 #additional optional arguments detailed in official documentation
 ```
  
-The resulting .bed files will have 9 columns of information detailing the likelihood that a cytosine is methylated at each location. Specifically, each column has the following information:    
+The resulting .bed files will have 9 columns of information detailing the likelihood that a CpG site is methylated at each location. Specifically, each column has the following information:    
 1. reference name   
 2. start coordinate   
 3. end coordinate   
@@ -168,4 +170,67 @@ The resulting .bed files will have 9 columns of information detailing the likeli
  
 ## Visualization   
 
-The .bed file(s) obtained from this process contain the final information this workflow is designed to produce. From here there are many avenues for analyzing the data. For this project, we will be using R to visualize density of methylation across the genome.
+The .bed file(s) obtained from this process contain the final information this workflow is designed to produce. From here there are many avenues for analyzing the data. For this project, we will be using R to visualize density of methylation across the genome. Since we will no longer be working in Ubuntu at this point, FARM users will need to export their .bed files to their own machines. 
+
+### Exporting data from FARM
+
+To copy data from FARM to your machine, it will need to be pulled from your machine rather than pushed from FARM. Start by listing the directory contents and printing the path to the directory so you will be able to reference this information if you do not have it memorized.
+
+```bash
+ls
+pwd
+```
+
+Next, disconnect from FARM by holding the control key and then pressing the D key. After doing this, Ubuntu should be in your machine's home directory rather than a FARM directory, but your command history from FARM should still be visible for you to reference. Then use the below command to activate your FARM SSH key, map the path to the file you are getting, and map the path to the directory to which you want the file exported. 
+
+```bash
+rsync -axz --progress -e "ssh -CY " user@farm.ucdavis.edu:/path/to/farm/directory/filename.bed /path/to/your/directory
+```
+
+### Opening your .bed file in R
+
+The following code creates a function called LoadBED, which can be used to load your .bed file into R as a data frame. It is a modified version of code from this source: https://gist.github.com/zerodel/3a901cc5c63e5c2e2bc95c937862a468
+
+```r
+LoadBED <- function(path.to.bed) {
+    if (require(data.table)) {
+        this.bed <-
+            data.table::fread(
+                path.to.bed,
+                header = F,
+                sep = "\t",
+                stringsAsFactors = F
+            )
+    } else {
+        this.bed <-
+            read.table(
+                path.to.bed,
+                header = F,
+                sep = "\t",
+                stringsAsFactors = F
+            )
+    }
+    
+    names.bed <-
+        c(
+            "chrom",
+            "start",
+            "end",
+            "modprob",
+            "haplo",
+            "coverage",
+            "modcount",
+            "unmodcount",
+            "dismodprob"
+        )
+    num.col.this.bed <- dim(this.bed)[2]
+    names(this.bed) <- names.bed[1:num.col.this.bed]
+    return(this.bed)
+}
+```
+
+The LoadBED function will take the path to your .bed file as its argument. If using a Windows computer, the path to this file on your machine will be the same as it is in Ubuntu with the following prefix: //wsl.localhost/Ubuntu/. You will want to bind the output of the function to a name, which you will then be able to access as your data frame.
+
+```r
+S18 <- LoadBED("//wsl.localhost/Ubuntu/home/user/movie.combined.denovo.bed")
+```
