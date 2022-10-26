@@ -143,6 +143,4 @@ ccsmeth call_freqb \
   --threads 10 --sort --bed
 ```
 
-## Next Steps
-
-After obtaining your final .bed files, you can visualize the data using the Integrative Genomics Viewer, or IGV. 
+The output for this step should be a .bed file containing location-specific information about methylation across the genome. This file can be used for visualization and quantitative analyses. For an example of how to visualize methylation data, see the visualization section of the "PacBio Primrose in Ubuntu" markdown file and Figure 1 in the repository. 
