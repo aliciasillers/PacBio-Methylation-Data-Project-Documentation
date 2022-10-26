@@ -142,7 +142,6 @@ The first script to run will contain the following code, which will use the .yam
 ```bash
 # create conda environment
 conda env create -f conda_env_cpg.yaml
-  # or conda env create -f ./pb-CpG-tools/conda_env_cpg.yaml
 
 # activate environment
 conda activate cpg
