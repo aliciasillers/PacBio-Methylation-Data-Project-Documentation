@@ -280,7 +280,9 @@ Finally, use ggplot to create the figure.
 ggplot(Final_Data, aes(x = bins, y = modprob, colour = chrom)) + geom_col() + facet_wrap(vars(chrom)) + theme(legend.position = "none") + ggtitle("Probability of Methylation at CpG Sites Across the Genome") + xlab("Position") + ylab("Average Probability of Methylation")
 ```
 
-Here is the final result when all of the above steps are carried out with Strawberry data:    
-![Figure]("C:/Users/alici/Desktop/Davis/Year 1/Knapp Lab Rotation/Figure 1.jpg")
+Here is the final result when all of the above steps are carried out with Strawberry data: 
+
+[![Figure]["C:/Users/alici/Desktop/Davis/Year 1/Knapp Lab Rotation/Figure 1.jpg"]][https://drive.google.com/file/d/1oRrdp8cCZpoppev7xQgCgZIPynXYOFHq/view?usp=sharing]
+
 
 
