@@ -108,11 +108,11 @@ conda install -c bioconda pbmm2
 Before you can get started using pbmm2, you will need to download the reference genome to which to align your data. For this, you can use the wget command with the url to the online download in order to download the files from the internet into your directory. The result may be a zipped file, in which case you can use the unzip command in order to access the files inside.
 
 ```bash
-wget http://url.org/ref.zip
+wget http://url.org/ref.gz
 ```
 
 ```bash
-unzip ref.zip
+gunzip ref.gz
 ```
 
 ### Run pbmm2
