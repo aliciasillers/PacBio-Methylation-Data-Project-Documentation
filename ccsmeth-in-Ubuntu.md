@@ -84,11 +84,11 @@ ccsmeth call_hifi --subreads /path/to/subreads.bam \
 In order to align your reads, you will need to have a reference genome. If you do not already have the reference genome downloaded, you can look for a file online and download it with the following code.
 
 ```bash
-wget http://url.org/ref.zip
+wget http://url.org/ref.gz
 ```
 
 ```bash
-unzip ref.zip #this step is only necessary if the data is downloaded in a zipped file
+gunzip ref.gz #this step is only necessary if the data is downloaded in a zipped file
 ```
 
 Inputs for the following code are the output file from the call_hifi step and your reference genome.
